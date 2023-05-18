@@ -40,7 +40,8 @@ const userLogin = async (req, res, next) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       const data = {
         email : user.email,
-        username : user.username
+        username : user.username,
+        id: user._id,
       }
       return res.cookie("token", token, {
         httpOnly: true,
@@ -49,6 +50,7 @@ const userLogin = async (req, res, next) => {
       .json({
         msg: "logIn sucessfully",
         details: data,
+        token: token
       });
     } catch (err) {
       next(err);

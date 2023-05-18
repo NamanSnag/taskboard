@@ -10,6 +10,10 @@ const listSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  taskOrder: {
+    type: Array,
+    default: [],
+  },
 },{
     timestamps: true,
 });
