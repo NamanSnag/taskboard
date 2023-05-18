@@ -40,14 +40,17 @@ const updateTaskOrder = async (req, res, next) => {
     
     // Update the source list's task order
     const source = await List.findById({_id : sourceListId});
-    source.taskOrder = sourceOrder;
+    if(sourceOrder !== source.taskOrder) {
+      source.taskOrder = sourceOrder;
+      await source.save();
+    }
 
     // Update the destination list's task order
-    const dest = await List.findByIdAndUpdate(destinationListId);
-    dest.taskOrder = destinationOrder;
-
-    await source.save();
-    await dest.save();
+    const dest = await List.findById(destinationListId);
+    if(destinationOrder !== dest.taskOrder) {
+      dest.taskOrder = destinationOrder;
+      await dest.save();
+    }
 
     return res.status(200).json({ success: true, message: "Task order updated successfully" });
   } catch (error) {

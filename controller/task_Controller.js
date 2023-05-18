@@ -40,9 +40,27 @@ const createTask = async (req, res, next) => {
   // update task
   const updateTask = async (req, res, next) => {
     const { taskId } = req.params;
-    const { title, completed } = req.body;
+    const { title, completed, listId } = req.body;
   
     try {
+      // Find the list and update the task order
+      const list = await List.findById(listId);
+      if (!list) {
+        return res.status(404).json({ error: 'List not found' });
+      }
+  
+      const taskIndex = list.taskOrder.findIndex(task => task._id.toString() === taskId);
+      if (taskIndex === -1) {
+        return res.status(404).json({ error: 'Task not found in the list' });
+      }
+  
+      list.taskOrder[taskIndex].completed = completed;
+      const updatedTaskOrder = list.taskOrder.toObject(); // Convert taskOrder to plain JavaScript array
+  
+      // Update the task order in the database
+      await List.findByIdAndUpdate(listId, { taskOrder: updatedTaskOrder });
+  
+      // Update the task
       const task = await Task.findByIdAndUpdate(
         taskId,
         { title, completed },
@@ -53,15 +71,48 @@ const createTask = async (req, res, next) => {
         return res.status(404).json({ error: 'Task not found' });
       }
   
-      return res.json(task);
+      return res.status(200).json({
+        msg: 'Task updated successfully',
+        details: updatedTaskOrder
+      });
     } catch (error) {
       next(error);
     }
   };
+
+  const deleteTask = async (req, res, next) => {
+    const { taskId } = req.params;
   
+    try {
+      // Find the task and get the associated list ID
+      const task = await Task.findById(taskId);
+      if (!task) {
+        return res.status(404).json({ error: 'Task not found' });
+      }
+      const listId = task.listId;
+  
+      // Delete the task from the Task collection
+      await Task.findByIdAndDelete(taskId);
+  
+      // Remove the task ID from the taskOrder array in the List collection
+      const list = await List.findById(listId);
+      if (!list) {
+        return res.status(404).json({ error: 'List not found' });
+      }
+  
+      list.taskOrder = list.taskOrder.filter(task => task._id.toString() !== taskId);
+      const updatedOrder = list.taskOrder.toObject();
+      await List.findByIdAndUpdate(listId, { taskOrder: updatedOrder });
+  
+      return res.status(200).json({ msg: 'Task deleted successfully', details: updatedOrder });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   module.exports = {
     createTask,
     updateTask,
-    getTask
+    getTask,
+    deleteTask
   }
