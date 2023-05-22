@@ -36,7 +36,7 @@ const getList = async (req, res, next) => {
 // Update a list
 const updateTaskOrder = async (req, res, next) => {
   try {
-    const { sourceListId, destinationListId, sourceOrder, destinationOrder } = req.body;
+    const { sourceListId, destinationListId, sourceOrder, destinationOrder, taskId } = req.body;
     
     // Update the source list's task order
     const source = await List.findById({_id : sourceListId});
@@ -52,8 +52,11 @@ const updateTaskOrder = async (req, res, next) => {
       await dest.save();
     }
 
+    await Task.findByIdAndUpdate(taskId, {listId:destinationListId});
+
     return res.status(200).json({ success: true, message: "Task order updated successfully" });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
