@@ -1,0 +1,28 @@
+.landingpage {
+    height: 100vh;
+    background-image: url("https://images.unsplash.com/photo-1514474959185-1472d4c4e0d4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cHJvZHVjdGl2aXR5fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+    .land__back {
+        background-color: rgba(6, 24, 40, 0.325);
+        backdrop-filter: blur(4px);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+
+        h2 {
+            font-size: 40px;
+            margin-bottom: 2px;
+        }
+    
+        p {
+            font-size: 20px;
+        }
+    }
+}

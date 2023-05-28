@@ -1,0 +1,84 @@
+.list {
+    background-color: rgb(238, 237, 236);
+    border: 2px solid rgb(185, 182, 182);
+    min-width: 310px;
+    position: relative;
+
+    .list__head {
+        border-bottom: 2px solid rgb(219, 213, 213);
+
+        p {
+            text-align: center;
+            margin: 5px;
+        }
+    }
+
+    .list__body {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 2px;
+        height: 320px;
+        // overflow: scroll;
+    }
+
+    .list__delete {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 18px;
+        padding: 6px 10px;
+        border-bottom-left-radius: 40px;
+        background-color: rgb(255, 8, 8);
+
+        .cross {
+            color: white;
+            margin-left: 6px;
+        }
+
+        &:hover {
+            background-color: rgb(12, 4, 251);
+        }
+    }
+
+    .list__addTask {
+        background-color: rgb(199, 201, 203);
+        padding: 20px;
+
+        form {
+            display: flex;
+            gap: 20px;
+        }
+    }
+
+    .list__checkedD {
+        background-color: rgb(45, 61, 74);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        
+        p {
+            margin-top: 0px;
+            margin-bottom: 4px;
+            padding: 4px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: aliceblue;
+        }
+
+        .trash {
+            color: red;
+            margin-top: 0px;
+            padding: 4px;
+        }
+
+        &:hover {
+            background-color: red;
+
+            .trash {
+                color: white;
+            }
+        }
+    }
+}
