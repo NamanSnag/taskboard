@@ -1,46 +1,41 @@
 const express = require('express');
-require('dotenv').config()
+require('dotenv').config();
 const db = require('./config/mongoose');
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3001;
 const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
+const mime = require('mime');
 
 app.use(cors());
 
-// cookie
+// Cookie
 app.use(cookieParser());
 
 app.use(express.json());
 
-// urlencoded add to extract data from
-app.use(express.urlencoded());
+// URL-encoded to extract data from requests
+app.use(express.urlencoded({ extended: true }));
 
-// routes
-app.use('/', require('./routes'));
+// Routes
+app.use('/api', require('./routes'));
 
-// error handler
-app.use((err, req, res, next)=>{
+app.use(express.static(path.join(__dirname, "./client/build")));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"));
+})
+
+// Error handler
+app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const message = err.message || 'Something went wrong';
   return res.status(errorStatus).json({
-      succcess: false,
-      status: errorStatus,
-      message: message,
-      stack: err.stack
-  })
-});
-
-// for production use only
-app.use(express.static(path.join(__dirname,"./client/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(__dirname,"./client/build/index.html"),
-    function(err){
-      res.status(500).send(err);
-    }
-  )
+    success: false,
+    status: errorStatus,
+    message: message,
+    stack: err.stack
+  });
 });
 
 app.listen(port, () => {
